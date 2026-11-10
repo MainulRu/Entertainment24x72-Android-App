@@ -1,4 +1,3 @@
-
 package com.entertainment24x72.app;
 
 import android.content.Context;
@@ -8,77 +7,43 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
+import java.util.ArrayList;
 import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.Holder> {
-
     private final Context context;
-    private final List<NewsItem> items;
-
-    public NewsAdapter(Context context, List<NewsItem> items) {
-        this.context = context;
-        this.items = items;
+    private final List<NewsItem> items = new ArrayList<>();
+    public NewsAdapter(Context context, List<NewsItem> initial) {
+        this.context=context; if(initial!=null) items.addAll(initial);
     }
-
-    @NonNull
-    @Override
-    public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context)
-                .inflate(R.layout.item_news, parent, false);
-        return new Holder(view);
+    public void replaceItems(List<NewsItem> data) {
+        items.clear(); items.addAll(data); notifyDataSetChanged();
     }
-
-    @Override
-    public void onBindViewHolder(@NonNull Holder holder, int position) {
-        NewsItem news = items.get(position);
-
-        holder.title.setText(news.title);
-        holder.summary.setText(news.summary);
-        holder.date.setText(news.date);
-        holder.category.setText(news.category);
-
-        if (news.image != null && !news.image.isEmpty()) {
-            Glide.with(context)
-                    .load(news.image)
-                    .placeholder(R.drawable.news_placeholder)
-                    .into(holder.image);
-        } else {
-            holder.image.setImageResource(R.drawable.news_placeholder);
-        }
-
-        holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, ArticleActivity.class);
-            intent.putExtra("title", news.title);
-            intent.putExtra("content", news.content);
-            intent.putExtra("url", news.url);
-            intent.putExtra("date", news.date);
-            context.startActivity(intent);
+    @Override public int getItemViewType(int position){ return position==0?1:0; }
+    @NonNull @Override public Holder onCreateViewHolder(@NonNull ViewGroup parent,int type) {
+        int layout=type==1?R.layout.item_featured_news:R.layout.item_news;
+        return new Holder(LayoutInflater.from(context).inflate(layout,parent,false));
+    }
+    @Override public void onBindViewHolder(@NonNull Holder h,int position) {
+        NewsItem n=items.get(position);
+        h.title.setText(n.title); h.summary.setText(n.summary);
+        h.date.setText(n.date); h.category.setText(n.category);
+        Glide.with(context).load(n.image).placeholder(R.drawable.news_placeholder).centerCrop().into(h.image);
+        h.itemView.setOnClickListener(v->{
+            Intent i=new Intent(context,ArticleActivity.class);
+            i.putExtra("title",n.title); i.putExtra("content",n.content);
+            i.putExtra("url",n.url); i.putExtra("date",n.date); i.putExtra("image",n.image);
+            context.startActivity(i);
         });
     }
-
-    @Override
-    public int getItemCount() {
-        return items.size();
-    }
-
+    @Override public int getItemCount(){return items.size();}
     static class Holder extends RecyclerView.ViewHolder {
-
-        ImageView image;
-        TextView title, summary, date, category;
-
-        Holder(View view) {
-            super(view);
-
-            image = view.findViewById(R.id.newsImage);
-            title = view.findViewById(R.id.newsTitle);
-            summary = view.findViewById(R.id.newsSummary);
-            date = view.findViewById(R.id.newsDate);
-            category = view.findViewById(R.id.newsCategory);
-        }
+        ImageView image; TextView title,summary,date,category;
+        Holder(View v){super(v); image=v.findViewById(R.id.newsImage);
+            title=v.findViewById(R.id.newsTitle); summary=v.findViewById(R.id.newsSummary);
+            date=v.findViewById(R.id.newsDate); category=v.findViewById(R.id.newsCategory);}
     }
 }

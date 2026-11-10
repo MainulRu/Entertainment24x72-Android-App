@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:layout_marginTop="5dp" android:layout_marginBottom="9dp"
+    card_view:cardCornerRadius="11dp" card_view:cardElevation="2dp" card_view:cardUseCompatPadding="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+        <ImageView android:id="@+id/newsImage" android:layout_width="match_parent" android:layout_height="218dp"
+            android:scaleType="centerCrop" android:contentDescription="প্রধান সংবাদের ছবি"/>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="13dp">
+            <TextView android:id="@+id/newsCategory" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:textColor="#C90024" android:textStyle="bold" android:textSize="13sp"/>
+            <TextView android:id="@+id/newsTitle" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:textColor="#151515" android:textSize="21sp" android:textStyle="bold"
+                android:lineSpacingExtra="3dp" android:paddingTop="5dp"/>
+            <TextView android:id="@+id/newsSummary" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:textColor="#555555" android:textSize="14sp" android:maxLines="3"
+                android:ellipsize="end" android:paddingTop="6dp"/>
+            <TextView android:id="@+id/newsDate" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:textColor="#999999" android:textSize="11sp" android:paddingTop="7dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -1,50 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="#F5F5F5"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ENTERTAINMENT24X72"
-        android:textColor="#FFFFFF"
-        android:background="#C90024"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:padding="18dp"/>
-
-    <EditText
-        android:id="@+id/searchBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:hint="সংবাদ খুঁজুন..."
-        android:singleLine="true"
-        android:background="@drawable/search_background"
-        android:padding="12dp"/>
-
-    <TextView
-        android:id="@+id/statusText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:text="সংবাদ লোড হচ্ছে..."
-        android:textColor="#555555"/>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/newsList"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="8dp"
+    android:orientation="vertical" android:background="#FFFFFF"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="58dp"
+        android:gravity="center_vertical" android:paddingStart="16dp" android:paddingEnd="12dp"
+        android:background="#C90024" android:orientation="horizontal">
+        <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"
+            android:text="ENTERTAINMENT24X72" android:textColor="#FFFFFF"
+            android:textStyle="bold" android:textSize="19sp" />
+        <TextView android:id="@+id/refreshButton" android:layout_width="42dp" android:layout_height="42dp"
+            android:gravity="center" android:text="↻" android:textColor="#FFFFFF" android:textSize="27sp"
+            android:contentDescription="সংবাদ রিফ্রেশ"/>
+    </LinearLayout>
+    <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:background="#FAFAFA" android:scrollbars="none" android:fillViewport="false">
+        <LinearLayout android:id="@+id/categoryContainer" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:orientation="horizontal"
+            android:paddingStart="8dp" android:paddingEnd="8dp" android:paddingTop="7dp" android:paddingBottom="7dp"/>
+    </HorizontalScrollView>
+    <EditText android:id="@+id/searchBox" android:layout_width="match_parent" android:layout_height="46dp"
+        android:layout_marginStart="14dp" android:layout_marginEnd="14dp" android:layout_marginTop="8dp"
+        android:layout_marginBottom="5dp" android:hint="সংবাদ খুঁজুন..." android:singleLine="true"
+        android:background="@drawable/search_background" android:paddingStart="14dp" android:paddingEnd="14dp"
+        android:textSize="15sp"/>
+    <TextView android:id="@+id/statusText" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:paddingStart="16dp" android:paddingEnd="16dp" android:paddingTop="5dp" android:paddingBottom="5dp"
+        android:text="সংবাদ লোড হচ্ছে..." android:textColor="#777777" android:textSize="12sp"/>
+    <ProgressBar android:id="@+id/progressBar" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_gravity="center_horizontal"/>
+    <androidx.recyclerview.widget.RecyclerView android:id="@+id/newsList"
+        android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
+        android:paddingStart="10dp" android:paddingEnd="10dp" android:paddingTop="4dp"
         android:clipToPadding="false"/>
-
 </LinearLayout>
