@@ -2,22 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:background="#FFFFFF"
     android:layout_width="match_parent" android:layout_height="match_parent">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="58dp"
-        android:gravity="center_vertical" android:paddingStart="16dp" android:paddingEnd="12dp"
-        android:background="#C90024" android:orientation="horizontal">
-        <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"
-            android:text="ENTERTAINMENT24X72" android:textColor="#FFFFFF"
-            android:textStyle="bold" android:textSize="19sp" />
-        <TextView android:id="@+id/refreshButton" android:layout_width="42dp" android:layout_height="42dp"
-            android:gravity="center" android:text="↻" android:textColor="#FFFFFF" android:textSize="27sp"
+    <LinearLayout android:layout_width="match_parent" android:layout_height="64dp"
+        android:gravity="center_vertical" android:paddingStart="8dp" android:paddingEnd="8dp"
+        android:background="#FFFFFF" android:orientation="horizontal">
+        <TextView android:id="@+id/menuButton" android:layout_width="44dp" android:layout_height="48dp"
+            android:gravity="center" android:text="☰" android:textColor="#202020" android:textSize="25sp"
+            android:contentDescription="মেনু" />
+        <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent"
+            android:gravity="center" android:orientation="vertical">
+            <TextView android:id="@+id/headerLogo" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="ENTERTAINMENT24X72" android:textColor="#C90024"
+                android:textStyle="bold" android:textSize="19sp" android:fontFamily="sans-serif-condensed" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="সর্বশেষ সংবাদ, সবসময়" android:textColor="#777777" android:textSize="9sp" />
+        </LinearLayout>
+        <TextView android:id="@+id/headerSearch" android:layout_width="42dp" android:layout_height="48dp"
+            android:gravity="center" android:text="⌕" android:textColor="#202020" android:textSize="30sp"
+            android:contentDescription="খুঁজুন" />
+        <TextView android:id="@+id/refreshButton" android:layout_width="42dp" android:layout_height="48dp"
+            android:gravity="center" android:text="↻" android:textColor="#C90024" android:textSize="27sp"
             android:contentDescription="সংবাদ রিফ্রেশ"/>
     </LinearLayout>
+    <View android:layout_width="match_parent" android:layout_height="3dp" android:background="#C90024" />
     <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:background="#FAFAFA" android:scrollbars="none" android:fillViewport="false">
+        android:background="#FFFFFF" android:scrollbars="none" android:fillViewport="false">
         <LinearLayout android:id="@+id/categoryContainer" android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:orientation="horizontal"
             android:paddingStart="8dp" android:paddingEnd="8dp" android:paddingTop="7dp" android:paddingBottom="7dp"/>
     </HorizontalScrollView>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:paddingTop="5dp" android:paddingBottom="3dp">
+        <androidx.viewpager2.widget.ViewPager2 android:id="@+id/newsSlider"
+            android:layout_width="match_parent" android:layout_height="238dp" />
+        <LinearLayout android:id="@+id/sliderDots" android:layout_width="match_parent"
+            android:layout_height="22dp" android:gravity="center" android:orientation="horizontal" />
+    </LinearLayout>
     <EditText android:id="@+id/searchBox" android:layout_width="match_parent" android:layout_height="46dp"
         android:layout_marginStart="14dp" android:layout_marginEnd="14dp" android:layout_marginTop="8dp"
         android:layout_marginBottom="5dp" android:hint="সংবাদ খুঁজুন..." android:singleLine="true"

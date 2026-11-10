@@ -16,10 +16,13 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.Gravity;
 import android.widget.Toast;
+import android.widget.PopupMenu;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
+import android.widget.FrameLayout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -44,6 +47,16 @@ public class MainActivity extends AppCompatActivity {
     private static final String FEED = "https://entertainment24x72.blogspot.com/feeds/posts/default?alt=json&max-results=50";
     private final ArrayList<NewsItem> all = new ArrayList<>();
     private NewsAdapter adapter;
+    private SliderAdapter sliderAdapter;
+    private ViewPager2 newsSlider;
+    private LinearLayout sliderDots;
+    private final Handler sliderHandler = new Handler(Looper.getMainLooper());
+    private final Runnable sliderRunnable = new Runnable() { public void run() {
+        if (sliderAdapter != null && sliderAdapter.getItemCount() > 1 && newsSlider != null) {
+            int next = (newsSlider.getCurrentItem() + 1) % sliderAdapter.getItemCount();
+            newsSlider.setCurrentItem(next, true); sliderHandler.postDelayed(this, 4000);
+        }
+    }};
     private TextView status;
     private ProgressBar progress;
     private LinearLayout categoryContainer;
@@ -56,6 +69,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         RecyclerView list = findViewById(R.id.newsList);
+        newsSlider = findViewById(R.id.newsSlider);
+        sliderDots = findViewById(R.id.sliderDots);
+        sliderAdapter = new SliderAdapter(this);
+        newsSlider.setAdapter(sliderAdapter);
+        newsSlider.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override public void onPageSelected(int position) { super.onPageSelected(position); updateSliderDots(position); }
+        });
         EditText search = findViewById(R.id.searchBox);
         status = findViewById(R.id.statusText);
         progress = findViewById(R.id.progressBar);
@@ -65,6 +85,28 @@ public class MainActivity extends AppCompatActivity {
         list.setAdapter(adapter);
 
         findViewById(R.id.refreshButton).setOnClickListener(v -> loadFeed());
+        findViewById(R.id.headerSearch).setOnClickListener(v -> {
+            search.requestFocus();
+            search.setSelection(search.getText().length());
+            ((android.view.inputmethod.InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+                    .showSoftInput(search, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT);
+        });
+        findViewById(R.id.menuButton).setOnClickListener(v -> {
+            PopupMenu menu = new PopupMenu(MainActivity.this, v);
+            menu.getMenu().add("প্রচ্ছদ");
+            menu.getMenu().add("সর্বশেষ");
+            for (int i = 0; i < categoryContainer.getChildCount(); i++) {
+                String category = String.valueOf(categoryContainer.getChildAt(i).getTag());
+                if (!category.equals("প্রচ্ছদ") && !category.equals("সর্বশেষ")) menu.getMenu().add(category);
+            }
+            menu.setOnMenuItemClickListener(item -> {
+                selectedCategory = item.getTitle().toString();
+                updateCategoryStyles();
+                filter();
+                return true;
+            });
+            menu.show();
+        });
         search.addTextChangedListener(new TextWatcher() {
             public void beforeTextChanged(CharSequence s,int st,int c,int a) {}
             public void onTextChanged(CharSequence s,int st,int before,int count) {
@@ -123,6 +165,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 handler.post(() -> {
                     all.clear(); all.addAll(parsed);
+                    ArrayList<NewsItem> slides = new ArrayList<>(parsed.subList(0, Math.min(5, parsed.size())));
+                    sliderAdapter.submit(slides); buildSliderDots();
                     buildCategories(); filter();
                     progress.setVisibility(View.GONE);
                     status.setText(parsed.size()+"টি সংবাদ পাওয়া গেছে");
@@ -135,6 +179,25 @@ public class MainActivity extends AppCompatActivity {
                 });
             } finally { if(connection!=null) connection.disconnect(); }
         });
+    }
+
+    private void buildSliderDots() {
+        sliderDots.removeAllViews();
+        for (int i = 0; i < sliderAdapter.getItemCount(); i++) {
+            View dot = new View(this); LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dp(7), dp(7));
+            lp.setMargins(dp(4), 0, dp(4), 0); dot.setLayoutParams(lp); dot.setBackground(dotDrawable(i == 0)); sliderDots.addView(dot);
+        }
+        if (sliderAdapter.getItemCount() > 1) { sliderHandler.removeCallbacks(sliderRunnable); sliderHandler.postDelayed(sliderRunnable, 4000); }
+    }
+    private void updateSliderDots(int selected) {
+        for (int i = 0; i < sliderDots.getChildCount(); i++) {
+            View dot = sliderDots.getChildAt(i); LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) dot.getLayoutParams();
+            lp.width = dp(i == selected ? 18 : 7); lp.height = dp(7); dot.setLayoutParams(lp); dot.setBackground(dotDrawable(i == selected));
+        }
+    }
+    private GradientDrawable dotDrawable(boolean active) {
+        GradientDrawable d = new GradientDrawable(); d.setShape(GradientDrawable.OVAL);
+        d.setColor(active ? Color.rgb(201,0,36) : Color.rgb(205,205,205)); return d;
     }
 
     private void buildCategories() {
@@ -178,5 +241,5 @@ public class MainActivity extends AppCompatActivity {
         else status.setText(filtered.size()+"টি সংবাদ");
     }
     private int dp(int v){return (int)(v*getResources().getDisplayMetrics().density+0.5f);}
-    @Override protected void onDestroy(){super.onDestroy(); executor.shutdown();}
+    @Override protected void onDestroy(){super.onDestroy(); sliderHandler.removeCallbacks(sliderRunnable); executor.shutdown();}
 }

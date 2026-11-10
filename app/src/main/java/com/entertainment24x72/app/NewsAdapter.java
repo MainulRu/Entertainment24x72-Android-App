@@ -22,10 +22,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.Holder> {
     public void replaceItems(List<NewsItem> data) {
         items.clear(); items.addAll(data); notifyDataSetChanged();
     }
-    @Override public int getItemViewType(int position){ return position==0?1:0; }
     @NonNull @Override public Holder onCreateViewHolder(@NonNull ViewGroup parent,int type) {
-        int layout=type==1?R.layout.item_featured_news:R.layout.item_news;
-        return new Holder(LayoutInflater.from(context).inflate(layout,parent,false));
+        return new Holder(LayoutInflater.from(context).inflate(R.layout.item_news,parent,false));
     }
     @Override public void onBindViewHolder(@NonNull Holder h,int position) {
         NewsItem n=items.get(position);
